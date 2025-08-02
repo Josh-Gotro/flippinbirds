@@ -17,8 +17,19 @@ const ReportForm = () => {
   })
 
   const buildings = [
-    'Main Library', 'Student Center', 'Science Hall', 'Administration Building',
-    'Dormitory A', 'Dormitory B', 'Gymnasium', 'Arts Center', 'Dining Hall', 'Other'
+    'Egan Library',
+    'Egan Classroom Wing', 
+    'Mourant',
+    'Novatney',
+    'Whitehead',
+    'Hendrickson Annex',
+    'Soboleff',
+    'Hendrickson Main Building',
+    'John R. Pugh Residence Hall',
+    'Facilities Services',
+    'USFS Pacific Northwest Research Station',
+    'Student Housing',
+    'Other'
   ]
 
   const commonSpecies = [
