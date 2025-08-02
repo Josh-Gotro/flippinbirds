@@ -74,16 +74,14 @@ console.log('All env vars:', import.meta.env)
   }
 
 
+
   const COLORS = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#8b5cf6', '#ec4899', '#6b7280']
 
   if (loading) {
     return (
-      <div className="mt-4 sm:mt-6">
-        <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-xl border border-slate-200/50 p-4 sm:p-6 ring-1 ring-slate-100">
-          <div className="flex items-center justify-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <p className="text-slate-600 ml-3">Loading data...</p>
-          </div>
+      <div className="mt-6">
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <p className="text-gray-600">Loading data...</p>
         </div>
       </div>
     )
@@ -94,106 +92,138 @@ console.log('All env vars:', import.meta.env)
   const topSpecies = getSpeciesData()[0]
 
   return (
-    <div className="mt-4 sm:mt-6 space-y-4 sm:space-y-6">
-      <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-xl border border-slate-200/50 p-4 sm:p-6 ring-1 ring-slate-100">
-        <h2 className="text-lg sm:text-xl font-bold text-slate-900 mb-4 sm:mb-6 tracking-tight">Campus Bird Strike Data</h2>
+    <div className="mt-6 space-y-6">
+      <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-xl border border-slate-200/50 p-6 lg:p-8 ring-1 ring-slate-100">
+        <h2 className="text-lg lg:text-xl font-semibold text-slate-900 mb-6 tracking-tight">Campus Bird Strike Data</h2>
         
         {/* Key Stats */}
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
-          <div className="bg-gradient-to-br from-red-50 to-red-100 p-3 sm:p-4 rounded-2xl text-center border border-red-100 shadow-sm">
-            <div className="text-xl sm:text-2xl font-bold text-red-600">{reports.length}</div>
-            <div className="text-xs sm:text-sm text-red-700 font-medium">Total Reports</div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div className="bg-gradient-to-br from-red-50 to-red-100 p-4 lg:p-6 rounded-2xl text-center border border-red-200">
+            <div className="text-2xl lg:text-3xl font-bold text-red-600">{reports.length}</div>
+            <div className="text-sm lg:text-base text-red-700 font-medium">Total Reports</div>
           </div>
-          <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-3 sm:p-4 rounded-2xl text-center border border-orange-100 shadow-sm">
-            <div className="text-xl sm:text-2xl font-bold text-orange-600">
+          <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-4 lg:p-6 rounded-2xl text-center border border-orange-200">
+            <div className="text-2xl lg:text-3xl font-bold text-orange-600">
               {reports.filter(r => r.bird_condition === 'deceased').length}
             </div>
-            <div className="text-xs sm:text-sm text-orange-700 font-medium">Fatalities</div>
+            <div className="text-sm lg:text-base text-orange-700 font-medium">Fatalities</div>
+          </div>
+          <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 lg:p-6 rounded-2xl text-center border border-blue-200">
+            <div className="text-2xl lg:text-3xl font-bold text-blue-600">
+              {reports.filter(r => r.bird_condition === 'injured').length}
+            </div>
+            <div className="text-sm lg:text-base text-blue-700 font-medium">Injured</div>
+          </div>
+          <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 lg:p-6 rounded-2xl text-center border border-green-200">
+            <div className="text-2xl lg:text-3xl font-bold text-green-600">
+              {reports.filter(r => r.bird_condition === 'stunned').length}
+            </div>
+            <div className="text-sm lg:text-base text-green-700 font-medium">Recovered</div>
           </div>
         </div>
 
-        {/* Reports by Building */}
-        {getBuildingData().length > 0 && (
-          <div className="mb-4 sm:mb-6">
-            <h3 className="text-sm sm:text-md font-semibold text-slate-900 mb-3 tracking-tight">Reports by Building</h3>
-            <div className="bg-slate-50/50 rounded-2xl p-2 sm:p-3 border border-slate-100">
-            <ResponsiveContainer width="100%" height={180}>
-              <BarChart data={getBuildingData()}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis 
-                  dataKey="building" 
-                  angle={-45} 
-                  textAnchor="end" 
-                  height={60} 
-                  fontSize={10}
-                  interval={0}
-                />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="count" fill="#3b82f6" />
-              </BarChart>
-            </ResponsiveContainer>
+        {/* Charts Grid - Desktop Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+          {/* Reports by Building */}
+          {getBuildingData().length > 0 && (
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 lg:p-6 border border-slate-200/50">
+              <h3 className="text-md lg:text-lg font-semibold text-slate-900 mb-4">Reports by Building</h3>
+              <ResponsiveContainer width="100%" height={250}>
+                <BarChart data={getBuildingData()}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <XAxis 
+                    dataKey="building" 
+                    angle={-45} 
+                    textAnchor="end" 
+                    height={80} 
+                    fontSize={12}
+                    interval={0}
+                    tick={{ fill: '#64748b' }}
+                  />
+                  <YAxis tick={{ fill: '#64748b' }} />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '12px',
+                      boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)'
+                    }}
+                  />
+                  <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Bird Condition Outcomes */}
-        {getConditionData().length > 0 && (
-          <div className="mb-4 sm:mb-6">
-            <h3 className="text-sm sm:text-md font-semibold text-slate-900 mb-3 tracking-tight">Bird Condition Outcomes</h3>
-            <div className="bg-slate-50/50 rounded-2xl p-2 sm:p-3 border border-slate-100">
-            <ResponsiveContainer width="100%" height={180}>
-              <PieChart>
-                <Pie
-                  data={getConditionData()}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ condition, percent }) => `${condition} ${((percent || 0) * 100).toFixed(0)}%`}
-                  outerRadius={60}
-                  fill="#8884d8"
-                  dataKey="count"
-                >
-                  {getConditionData().map((_entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
+          {/* Bird Condition Outcomes */}
+          {getConditionData().length > 0 && (
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 lg:p-6 border border-slate-200/50">
+              <h3 className="text-md lg:text-lg font-semibold text-slate-900 mb-4">Bird Condition Outcomes</h3>
+              <ResponsiveContainer width="100%" height={250}>
+                <PieChart>
+                  <Pie
+                    data={getConditionData()}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ condition, percent }) => `${condition} ${((percent || 0) * 100).toFixed(0)}%`}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="count"
+                  >
+                                         {getConditionData().map((_, index) => (
+                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                     ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '12px',
+                      boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)'
+                    }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
-        {/* Top Species */}
+        {/* Top Species - Full Width on Desktop */}
         {getSpeciesData().length > 0 && (
-          <div className="mb-4 sm:mb-6">
-            <h3 className="text-sm sm:text-md font-semibold text-slate-900 mb-3 tracking-tight">Most Affected Species</h3>
-            <div className="bg-slate-50/50 rounded-2xl p-2 sm:p-3 border border-slate-100">
-            <ResponsiveContainer width="100%" height={180}>
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 lg:p-6 border border-slate-200/50">
+            <h3 className="text-md lg:text-lg font-semibold text-slate-900 mb-4">Most Affected Species</h3>
+            <ResponsiveContainer width="100%" height={250}>
               <BarChart data={getSpeciesData()}>
-                <CartesianGrid strokeDasharray="3 3" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                 <XAxis 
                   dataKey="species" 
                   angle={-45} 
                   textAnchor="end" 
-                  height={60} 
-                  fontSize={9}
+                  height={80} 
+                  fontSize={11}
                   interval={0}
+                  tick={{ fill: '#64748b' }}
                 />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="count" fill="#059669" />
+                <YAxis tick={{ fill: '#64748b' }} />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '12px',
+                    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)'
+                  }}
+                />
+                <Bar dataKey="count" fill="#059669" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
-            </div>
           </div>
         )}
 
         {/* Key Insights */}
-        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 sm:p-5 rounded-2xl border border-blue-100 shadow-sm">
-        <h3 className="font-semibold text-blue-900 mb-3 text-sm sm:text-base tracking-tight">Key Insights</h3>
-        <ul className="text-xs sm:text-sm text-blue-800 space-y-2">
+        <div className="bg-blue-50 p-4 rounded-lg">
+        <h3 className="font-medium text-blue-900 mb-2">Key Insights</h3>
+        <ul className="text-sm text-blue-800 space-y-1">
             {reports.length >= 10 ? (
             // Show detailed insights when we have enough data
             <>
@@ -220,8 +250,8 @@ console.log('All env vars:', import.meta.env)
         </ul>
         
         {reports.length < 10 && (
-            <div className="mt-3 p-3 bg-blue-100/70 rounded-xl border border-blue-200">
-            <p className="text-xs sm:text-sm text-blue-700 leading-relaxed">
+            <div className="mt-3 p-3 bg-blue-100 rounded border">
+            <p className="text-xs text-blue-700">
                 💡 <strong>Tip:</strong> More meaningful patterns will emerge as you collect additional reports. Consider encouraging campus-wide participation to identify problem areas.
             </p>
             </div>

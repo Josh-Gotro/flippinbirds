@@ -136,9 +136,9 @@ const ReportsList = () => {
       </div>
 
       {/* Reports list */}
-      <div className="space-y-3 sm:space-y-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
         {filteredReports.length === 0 ? (
-          <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-xl border border-slate-200/50 p-6 sm:p-8 text-center ring-1 ring-slate-100">
+          <div className="lg:col-span-2 bg-white/95 backdrop-blur-sm rounded-3xl shadow-xl border border-slate-200/50 p-6 sm:p-8 text-center ring-1 ring-slate-100">
             <AlertCircle className="w-10 h-10 sm:w-12 sm:h-12 text-slate-400 mx-auto mb-4" />
             <p className="text-slate-500 text-sm sm:text-base">
               {filter === 'all' ? 'No reports found.' : `No ${filter} reports found.`}
@@ -146,7 +146,7 @@ const ReportsList = () => {
           </div>
         ) : (
           filteredReports.map((report) => (
-            <div key={report.id} className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-lg border border-slate-200/50 ring-1 ring-slate-100 hover:shadow-xl transition-shadow duration-200">
+            <div key={report.id} className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-lg border border-slate-200/50 ring-1 ring-slate-100 hover:shadow-xl transition-all duration-200 hover:scale-[1.02]">
               {/* Header */}
               <div className="p-4 sm:p-5 border-b border-slate-200/50">
                 <div className="flex justify-between items-start gap-3">

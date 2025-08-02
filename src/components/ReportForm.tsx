@@ -127,8 +127,8 @@ const ReportForm = () => {
         <p className="text-slate-600 text-sm sm:text-base">Help us document bird-window collisions to improve campus safety for wildlife.</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
-        <div className="grid grid-cols-1 gap-3 sm:gap-4">
+                 <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
+         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
             <div>
             <label className="block text-sm font-semibold text-slate-700 mb-2">Date</label>
             <input
