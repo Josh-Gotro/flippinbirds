@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
-import { supabase } from './lib/supabase'
+import { supabase, type BirdStrike } from './lib/supabase'
 import './index.css'
 
 function App() {
-  const [reports, setReports] = useState([])
+  const [reports, setReports] = useState<BirdStrike[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -31,7 +31,7 @@ function App() {
       <h1 className="text-2xl font-bold mb-4">Bird Strike Reports</h1>
       <p className="mb-4">Connected to Supabase! Found {reports.length} reports.</p>
       
-      {reports.map((report: any) => (
+      {reports.map((report) => (
         <div key={report.id} className="border p-4 mb-2 rounded">
           <div className="font-semibold">{report.building}</div>
           <div className="text-sm text-gray-600">
