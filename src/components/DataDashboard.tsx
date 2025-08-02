@@ -47,6 +47,7 @@ console.log('All env vars:', import.meta.env)
     return Object.entries(buildingCounts)
       .map(([building, count]) => ({ building, count }))
       .sort((a, b) => b.count - a.count)
+      .slice(0, 12) // Top 12 buildings to keep chart readable
   }
 
   const getConditionData = () => {
@@ -70,7 +71,7 @@ console.log('All env vars:', import.meta.env)
     return Object.entries(speciesCounts)
       .map(([species, count]) => ({ species, count }))
       .sort((a, b) => b.count - a.count)
-      .slice(0, 8) // Top 8 species
+      .slice(0, 8) // Top 8 species for readability
   }
 
 
@@ -122,103 +123,158 @@ console.log('All env vars:', import.meta.env)
           </div>
         </div>
 
-        {/* Charts Grid - Desktop Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-          {/* Reports by Building */}
-          {getBuildingData().length > 0 && (
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 lg:p-6 border border-slate-200/50">
-              <h3 className="text-md lg:text-lg font-semibold text-slate-900 mb-4">Reports by Building</h3>
-              <ResponsiveContainer width="100%" height={250}>
-                <BarChart data={getBuildingData()}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis 
-                    dataKey="building" 
-                    angle={-45} 
-                    textAnchor="end" 
-                    height={80} 
-                    fontSize={12}
-                    interval={0}
-                    tick={{ fill: '#64748b' }}
-                  />
-                  <YAxis tick={{ fill: '#64748b' }} />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: 'rgba(255, 255, 255, 0.95)', 
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '12px',
-                      boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)'
-                    }}
-                  />
-                  <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          )}
+                          {/* Charts Section */}
+         <div className="space-y-6 lg:space-y-8">
+           {/* Top Row - Building and Condition Charts */}
+           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+                           {/* Reports by Building */}
+              {getBuildingData().length > 0 && (
+                                 <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 lg:p-4 pb-20 lg:pb-0 border border-slate-200/50">
+                 <div className="flex justify-between items-center mb-16">
+                   <h3 className="text-md lg:text-lg font-semibold text-slate-900">Reports by Building</h3>
+                   {new Set(reports.map(r => r.building)).size > 12 && (
+                     <span className="text-xs text-slate-500">
+                       Showing top 12 of {new Set(reports.map(r => r.building)).size} buildings
+                     </span>
+                   )}
+                 </div>
+                                                                  <ResponsiveContainer width="100%" height={280}>
+                                   <BarChart data={getBuildingData()} margin={{ bottom: 0, left: 0, right: 20, top: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                                         <XAxis 
+                       dataKey="building" 
+                       angle={-45} 
+                       textAnchor="end" 
+                       height={100} 
+                       fontSize={10}
+                       interval={0}
+                       tick={{ fill: '#64748b' }}
+                       tickFormatter={(value) => {
+                         // Truncate very long names and add ellipsis
+                         if (value.length > 15) {
+                           return value.substring(0, 12) + '...'
+                         }
+                         return value
+                       }}
+                     />
+                                         <YAxis 
+                       tick={{ fill: '#64748b' }} 
+                       tickFormatter={(value) => Math.round(value).toString()}
+                       domain={[0, 'dataMax']}
+                       allowDecimals={false}
+                     />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+                        border: '1px solid #e2e8f0',
+                        borderRadius: '12px',
+                        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)'
+                      }}
+                    />
+                    <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            )}
 
-          {/* Bird Condition Outcomes */}
-          {getConditionData().length > 0 && (
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 lg:p-6 border border-slate-200/50">
-              <h3 className="text-md lg:text-lg font-semibold text-slate-900 mb-4">Bird Condition Outcomes</h3>
-              <ResponsiveContainer width="100%" height={250}>
-                <PieChart>
-                  <Pie
-                    data={getConditionData()}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ condition, percent }) => `${condition} ${((percent || 0) * 100).toFixed(0)}%`}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="count"
-                  >
-                                         {getConditionData().map((_, index) => (
-                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                     ))}
-                  </Pie>
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: 'rgba(255, 255, 255, 0.95)', 
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '12px',
-                      boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)'
-                    }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          )}
-        </div>
+             {/* Bird Condition Outcomes */}
+             {getConditionData().length > 0 && (
+               <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 lg:p-6 border border-slate-200/50">
+                 <h3 className="text-md lg:text-lg font-semibold text-slate-900 mb-4">Bird Condition Outcomes</h3>
+                 <ResponsiveContainer width="100%" height={250}>
+                   <PieChart>
+                     <Pie
+                       data={getConditionData()}
+                       cx="50%"
+                       cy="50%"
+                       labelLine={false}
+                       outerRadius={70}
+                       fill="#8884d8"
+                       dataKey="count"
+                     >
+                       {getConditionData().map((_, index) => (
+                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                       ))}
+                     </Pie>
+                     <Tooltip 
+                       contentStyle={{ 
+                         backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+                         border: '1px solid #e2e8f0',
+                         borderRadius: '12px',
+                         boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)'
+                       }}
+                     />
+                   </PieChart>
+                 </ResponsiveContainer>
+                 
+                 {/* Legend */}
+                 <div className="mt-4 flex flex-wrap justify-center gap-3">
+                   {getConditionData().map((item, index) => (
+                     <div key={item.condition} className="flex items-center gap-2 text-sm">
+                       <div 
+                         className="w-3 h-3 rounded-full" 
+                         style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                       />
+                       <span className="font-medium text-slate-700">{item.condition}</span>
+                       <span className="text-slate-500">({item.count})</span>
+                     </div>
+                   ))}
+                 </div>
+               </div>
+             )}
+           </div>
 
-        {/* Top Species - Full Width on Desktop */}
-        {getSpeciesData().length > 0 && (
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 lg:p-6 border border-slate-200/50">
-            <h3 className="text-md lg:text-lg font-semibold text-slate-900 mb-4">Most Affected Species</h3>
-            <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={getSpeciesData()}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                <XAxis 
-                  dataKey="species" 
-                  angle={-45} 
-                  textAnchor="end" 
-                  height={80} 
-                  fontSize={11}
-                  interval={0}
-                  tick={{ fill: '#64748b' }}
-                />
-                <YAxis tick={{ fill: '#64748b' }} />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: 'rgba(255, 255, 255, 0.95)', 
-                    border: '1px solid #e2e8f0',
-                    borderRadius: '12px',
-                    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)'
-                  }}
-                />
-                <Bar dataKey="count" fill="#059669" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+                       {/* Species Chart - Full Width Row */}
+            {getSpeciesData().length > 0 && (
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 lg:p-6 pb-24 lg:pb-6 border border-slate-200/50">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-md lg:text-lg font-semibold text-slate-900">Most Affected Species</h3>
+                  {new Set(reports.filter(r => r.species && r.species !== 'Unknown' && r.species !== 'Other').map(r => r.species)).size > 8 && (
+                    <span className="text-xs text-slate-500">
+                      Showing top 8 of {new Set(reports.filter(r => r.species && r.species !== 'Unknown' && r.species !== 'Other').map(r => r.species)).size} species
+                    </span>
+                  )}
+                </div>
+                                 <ResponsiveContainer width="100%" height={280}>
+                  <BarChart data={getSpeciesData()} margin={{ bottom: 0, left: -20, right: 0, top: 20 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                                         <XAxis 
+                       dataKey="species" 
+                       angle={-45} 
+                       textAnchor="end" 
+                       height={70} 
+                       fontSize={10}
+                       interval={0}
+                       tick={{ fill: '#64748b' }}
+                                           tickFormatter={(value) => {
+                       // Truncate very long names and add ellipsis
+                       if (value.length > 15) {
+                         return value.substring(0, 12) + '...'
+                       }
+                       return value
+                     }}
+                    />
+                    <YAxis 
+                      tick={{ fill: '#64748b' }} 
+                      tickFormatter={(value) => Math.round(value).toString()}
+                      domain={[0, 'dataMax']}
+                      allowDecimals={false}
+                    />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+                        border: '1px solid #e2e8f0',
+                        borderRadius: '12px',
+                        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)'
+                      }}
+                      labelFormatter={(value) => value} // Show full name in tooltip
+                    />
+                    <Bar dataKey="count" fill="#059669" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            )}
           </div>
-        )}
 
         {/* Key Insights */}
         <div className="bg-blue-50 p-4 rounded-lg">
@@ -241,9 +297,12 @@ console.log('All env vars:', import.meta.env)
                 <li>• <strong>{reports.length}</strong> total incidents reported across campus</li>
                 <li>• <strong>{reports.filter(r => r.bird_condition === 'deceased').length}</strong> fatalities, <strong>{reports.filter(r => r.bird_condition === 'injured').length}</strong> injuries, <strong>{reports.filter(r => r.bird_condition === 'stunned').length}</strong> recoveries</li>
                 <li>• Reports from <strong>{new Set(reports.map(r => r.building)).size}</strong> different buildings</li>
-                {getSpeciesData().length > 0 && (
-                <li>• <strong>{new Set(reports.filter(r => r.species).map(r => r.species)).size}</strong> different bird species affected</li>
-                )}
+                                 {getSpeciesData().length > 0 && (
+                 <li>• <strong>{new Set(reports.filter(r => r.species).map(r => r.species)).size}</strong> different bird species affected</li>
+                 )}
+                 {getSpeciesData().length > 0 && getSpeciesData()[0]?.count > 10 && (
+                 <li>• <strong>{getSpeciesData()[0].species}</strong> is the most frequently reported species ({getSpeciesData()[0].count} reports)</li>
+                 )}
             </>
             )}
             <li>• Data collection period: {Math.ceil((new Date().getTime() - new Date(Math.min(...reports.map(r => new Date(r.date).getTime()))).getTime()) / (1000 * 60 * 60 * 24))} days</li>
@@ -252,7 +311,7 @@ console.log('All env vars:', import.meta.env)
         {reports.length < 10 && (
             <div className="mt-3 p-3 bg-blue-100 rounded border">
             <p className="text-xs text-blue-700">
-                💡 <strong>Tip:</strong> More meaningful patterns will emerge as you collect additional reports. Consider encouraging campus-wide participation to identify problem areas.
+                💡 <strong>Tip:</strong> More meaningful patterns will emerge as additional reports are collected.
             </p>
             </div>
         )}
