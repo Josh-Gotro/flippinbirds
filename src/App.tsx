@@ -1,34 +1,45 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react'
+import { supabase } from './lib/supabase'
+import './index.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [reports, setReports] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchReports = async () => {
+      const { data, error } = await supabase
+        .from('bird_strikes')
+        .select('*')
+        .order('created_at', { ascending: false })
+      
+      if (error) {
+        console.error('Error:', error)
+      } else {
+        setReports(data || [])
+      }
+      setLoading(false)
+    }
+
+    fetchReports()
+  }, [])
+
+  if (loading) return <div className="p-8">Loading...</div>
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="p-8">
+      <h1 className="text-2xl font-bold mb-4">Bird Strike Reports</h1>
+      <p className="mb-4">Connected to Supabase! Found {reports.length} reports.</p>
+      
+      {reports.map((report: any) => (
+        <div key={report.id} className="border p-4 mb-2 rounded">
+          <div className="font-semibold">{report.building}</div>
+          <div className="text-sm text-gray-600">
+            {report.date} - {report.bird_condition}
+          </div>
+        </div>
+      ))}
+    </div>
   )
 }
 
