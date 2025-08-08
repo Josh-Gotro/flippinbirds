@@ -13,7 +13,7 @@ export type BirdStrike = {
   building: string
   bird_condition: 'deceased' | 'injured' | 'stunned' | 'unknown'
   species?: string | null
-  reporter_email: string
+  reporter_email?: string | null
   notes?: string | null
   created_at?: string
 }

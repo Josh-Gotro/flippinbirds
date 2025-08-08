@@ -189,7 +189,7 @@ const ReportsList = () => {
                   {/* Reporter */}
                   <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-600">
                     <User className="w-3 h-3 sm:w-4 sm:h-4 text-slate-500" />
-                    <span className="font-mono text-xs">{formatEmail(report.reporter_email)}</span>
+                    <span className="font-mono text-xs">{formatEmail(report.reporter_email || 'Anonymous reporter')}</span>
                     </div>
 
                   {/* Notes */}

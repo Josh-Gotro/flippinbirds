@@ -2,7 +2,11 @@ import { useState } from 'react'
 import { Send, CheckCircle } from 'lucide-react'
 import { supabase, type BirdStrike } from '../lib/supabase'
 
-const ReportForm = () => {
+interface ReportFormProps {
+  onTabChange?: (tab: string) => void
+}
+
+const ReportForm = ({ onTabChange }: ReportFormProps) => {
   const [showSuccess, setShowSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -86,19 +90,24 @@ const ReportForm = () => {
       
       console.log('Success! Data inserted:', data) // Debug log
       
-      // Success - clear form and show message
-      setShowSuccess(true)
-      setFormData({
-        date: new Date().toISOString().split('T')[0],
-        time: new Date().toTimeString().slice(0, 5),
-        location: '',
-        building: '',
-        bird_condition: '',
-        species: '',
-        reporter_email: '',
-        notes: ''
-      })
-      setTimeout(() => setShowSuccess(false), 5000)
+             // Success - clear form and show message
+       setShowSuccess(true)
+       setFormData({
+         date: new Date().toISOString().split('T')[0],
+         time: new Date().toTimeString().slice(0, 5),
+         location: '',
+         building: '',
+         bird_condition: '',
+         species: '',
+         reporter_email: '',
+         notes: ''
+       })
+       setTimeout(() => setShowSuccess(false), 5000)
+       
+       // Redirect to data tab after a short delay
+       setTimeout(() => {
+         onTabChange?.('data')
+       }, 2000)
       
     } catch (error) {
       console.error('Caught error:', error)
@@ -213,14 +222,13 @@ const ReportForm = () => {
             </div>
 
             <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-2">Your Email</label>
+            <label className="block text-sm font-semibold text-slate-700 mb-2">Your Email (optional)</label>
             <input
                 type="email"
                 name="reporter_email"
                 value={formData.reporter_email}
                 onChange={handleInputChange}
                 placeholder="your.email@college.edu"
-                required
                 className="w-full px-3 py-3 sm:px-4 border-2 border-slate-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-sm sm:text-base bg-white/80 backdrop-blur-sm hover:border-slate-300"
             />
             </div>

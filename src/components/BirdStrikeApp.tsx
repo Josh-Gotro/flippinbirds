@@ -68,7 +68,7 @@ const BirdStrikeApp = () => {
       {/* Content - Responsive with safe area */}
       <div className="w-full max-w-md lg:max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 pb-safe">
         <div className="min-h-[50vh]">
-          {activeTab === 'report' && <ReportForm />}
+          {activeTab === 'report' && <ReportForm onTabChange={setActiveTab} />}
           {activeTab === 'data' && <DataDashboard />}
           {activeTab === 'view' && <ReportsList />}
         </div>
