@@ -77,7 +77,10 @@ const BirdStrikeApp = () => {
       {/* Footer with KOBA link */}
       <div className="bg-white/95 backdrop-blur-sm border-t border-slate-200/50 mt-auto">
         <div className="w-full max-w-md lg:max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="text-center">
+          <div className="text-center space-y-2">
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Not affiliated with UAS: KOBA is a community effort.
+            </p>
             <a 
               href="https://sites.google.com/view/keepourbirdsalive/" 
               target="_blank" 
