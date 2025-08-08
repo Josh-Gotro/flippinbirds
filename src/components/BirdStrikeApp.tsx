@@ -17,8 +17,8 @@ const BirdStrikeApp = () => {
               <AlertTriangle className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
             </div>
             <div className="flex-1 min-w-0">
-              <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-900 leading-tight tracking-tight">Bird Strike Reporter</h1>
-              <p className="text-xs sm:text-sm lg:text-base text-blue-600 font-medium truncate">KOBA — Keep Our Birds Alive</p>
+              <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-900 leading-tight tracking-tight">KOBA — Keep Our Birds Alive</h1>
+              <p className="text-xs sm:text-sm lg:text-base text-blue-600 font-medium truncate">Bird Strike Reporter</p>
             </div>
           </div>
         </div>
